@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('./user');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -13,22 +14,20 @@ const cardSchema = new mongoose.Schema({
     required: true,    
   },
 
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
-      required: true
-    },
-    likes: [
-      {
-        types: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
-        default: [],
-      },
-  ],
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    }
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: User,
+    required: true
+  },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: User,
+    default: [],
+  }],  
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  }
 });
 
 module.exports = mongoose.model('card', cardSchema);

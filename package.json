@@ -2,8 +2,7 @@
   "dependencies": {
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
-    "mongoose": "^7.4.0",
-    "validator": "^13.9.0"
+    "mongoose": "^7.4.0"    
   },
   "devDependencies": {
     "eslint": "^8.45.0",
@@ -18,17 +17,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "npx eslint .",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/karmadosha/express-mesto-gha.git"
-  },
+    "lint": "npx eslint ./"    
+  },  
   "author": "Karmadonova",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/karmadosha/express-mesto-gha/issues"
-  },
-  "homepage": "https://github.com/karmadosha/express-mesto-gha#readme"
+  "license": "ISC"  
 }
