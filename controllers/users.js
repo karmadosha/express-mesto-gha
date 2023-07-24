@@ -66,7 +66,7 @@ module.exports.updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then(() => {
       if (avatar) {
-        res.send({ data: avatar });
+        res.send({ avatar });
       } else {
         res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь не найден' });
       }
