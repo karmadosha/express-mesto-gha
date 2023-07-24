@@ -11,7 +11,7 @@ const cardSchema = new mongoose.Schema({
 
   link: {
     type: String,
-    required: true,    
+    required: true,
   },
 
   owner: {

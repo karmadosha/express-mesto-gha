@@ -51,7 +51,7 @@ module.exports.updateUserInfo = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'ошибка сервера' });
+        res.status(500).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -59,9 +59,9 @@ module.exports.updateUserInfo = (req, res) => {
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-    .then((user) => {
-      if (user) {
-        res.status(200).send({ data: user });
+    .then((avatar) => {
+      if (avatar) {
+        res.status(200).send({ data: avatar });
       }else {
         res.status(404).send({ message: 'Пользователь не найден'});
       }
@@ -70,7 +70,7 @@ module.exports.updateUserAvatar = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'ошибка сервера' });
+        res.status(500).send({ message: 'Ошибка сервера' });
       }
     });
 };
