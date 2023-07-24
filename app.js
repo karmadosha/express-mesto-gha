@@ -8,9 +8,7 @@ const { PORT = 3000 } = process.env;
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useNewUrlParser: true,
-})
-  .then(() => console.log('Server is working'))
-  .catch(() => console.log('No connection to server'));
+});
 
 const app = express();
 
@@ -26,6 +24,4 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(routes);
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+app.listen(PORT);
