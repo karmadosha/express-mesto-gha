@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const bodyParser = require('body-parser');
-const routes = require('./routes/index');
+const helmet = require('helmet');
+const router = require('./routes/index');
+const errorHandler = require('./middlewares/errors');
 
 const { PORT = 3000 } = process.env;
 
@@ -12,16 +13,14 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 
 const app = express();
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64bcd9edd3f9673a67fe7a8b',
-  };
-  next();
-});
+app.use(helmet());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(routes);
+app.use(router);
+app.use(errorHandler);
 
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log('app listen to port 3000');
+});
