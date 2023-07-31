@@ -10,10 +10,9 @@ module.exports.getCards = (req, res, next) => {
     .then((cards) => res.send({ data: cards }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new ERROR_INCORRECT_DATA('Переданы некорректные данные');
-      } else {
-        return next(err);
+        return new ERROR_INCORRECT_DATA('Переданы некорректные данные');
       }
+      return next(err);
     });
 };
 
@@ -62,10 +61,9 @@ module.exports.addLike = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new ERROR_INCORRECT_DATA('Переданы некорректные данные');
-      } else {
-        next(err);
+        return new ERROR_INCORRECT_DATA('Переданы некорректные данные');
       }
+      return next(err);
     });
 };
 
@@ -84,9 +82,8 @@ module.exports.deleteLike = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new ERROR_INCORRECT_DATA('Переданы некорректные данные');
-      } else {
-        next(err);
+        return new ERROR_INCORRECT_DATA('Переданы некорректные данные');
       }
+      return next(err);
     });
 };

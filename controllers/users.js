@@ -13,10 +13,9 @@ module.exports.getUsers = (req, res, next) => {
     .then((users) => res.send({ data: users }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new ERROR_INCORRECT_DATA('Переданы некорректные данные при создании пользователя');
-      } else {
-        next(err);
+        return new ERROR_INCORRECT_DATA('Переданы некорректные данные при создании пользователя');
       }
+      return next(err);
     });
 };
 
@@ -80,7 +79,7 @@ module.exports.updateUserInfo = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        throw new ERROR_INCORRECT_DATA('Переданы некорректные данные');
+        next(new ERROR_INCORRECT_DATA('Переданы некорректные данные'));
       }
       if (err.name === 'DocumentNotFoundError') {
         next(new ERROR_NOT_FOUND('Пользователь не найден'));
@@ -95,7 +94,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .then(() => res.send({ user: avatar }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new ERROR_INCORRECT_DATA('Переданы некорректные данные');
+        next(new ERROR_INCORRECT_DATA('Переданы некорректные данные'));
       }
       if (err.name === 'DocumentNotFoundError') {
         next(new ERROR_NOT_FOUND('Пользователь не найден'));
