@@ -6,7 +6,13 @@ const ErrorForbidden = require('../utils/errors/err-forbidden');
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => next(err));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        throw new ErrorBadRequest('Переданы некорректные данные');
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -28,12 +34,12 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById({ owner, _id: cardId })
     .then((card) => {
       if (!card) {
-        return next(new ErrorNotFound('Карточка не найдена'));
+        throw new ErrorNotFound('Карточка не найдена');
       }
       if (String(card.owner) !== String(owner)) {
-        return new ErrorForbidden('Недостаточно прав');
+        throw new ErrorForbidden('Недостаточно прав');
       }
-      return Card.deleteOne(cardId);
+      return Card.findByIdAndDelete(cardId);
     })
     .then(() => res.send({ message: 'Карточка успешно удалена' }))
     .catch((err) => next(err));
@@ -47,13 +53,13 @@ module.exports.addLike = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        return next(new ErrorNotFound('Карточка не найдена'));
+        throw new ErrorNotFound('Карточка не найдена');
       }
       return res.send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        return next(new ErrorBadRequest('Переданы некорректные данные'));
+        throw new ErrorBadRequest('Переданы некорректные данные');
       }
       return next(err);
     });
@@ -67,12 +73,13 @@ module.exports.deleteLike = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        return next(new ErrorNotFound('Карточка не найдена'));
-      } return res.send({ card });
+        throw new ErrorNotFound('Карточка не найдена');
+      }
+      return res.send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'validationError') {
-        return next(new ErrorBadRequest('Переданы некорректные данные'));
+        throw new ErrorBadRequest('Переданы некорректные данные');
       }
       return next(err);
     });

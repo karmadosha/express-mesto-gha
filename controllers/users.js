@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const User = require('../models/user');
 const ErrorNotFound = require('../utils/errors/err-not-found');
 const ErrorBadRequest = require('../utils/errors/err-bad-request');
@@ -10,7 +9,13 @@ const ErrorUnauthorized = require('../utils/errors/err-unauthorized');
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => next(err));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        throw new ErrorBadRequest('Переданы некорректные данные');
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -41,23 +46,15 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-
-  User.findOne({ email }).select('+password')
+  User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        return next(new ErrorUnauthorized('Неправильные email или пароль'));
+      if (user) {
+        const token = jwt.sign({ _id: user.id }, 'some-secret-key', { expiresIn: '7d' });
+        return res.send({ token });
       }
-      return bcrypt.compare(password, user.password)
-        .then((matched) => {
-          if (!matched) {
-            return next(new ErrorUnauthorized('Неправильные email или пароль'));
-          }
-          const token = jwt.sign({ _id: user.id }, 'some-secret-key', { expiresIn: '7d' });
-
-          return res.send({ token });
-        })
-        .catch(next);
-    });
+      return next(new ErrorUnauthorized('Требуется авторизация'));
+    })
+    .catch(next);
 };
 
 module.exports.getUserById = (req, res, next) => {
