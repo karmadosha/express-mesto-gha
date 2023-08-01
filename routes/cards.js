@@ -2,7 +2,11 @@ const cardsRouter = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const urls = require('../utils/urls');
 const {
-  getCards, createCard, deleteCard, addLike, deleteLike,
+  getCards,
+  createCard,
+  deleteCard,
+  addLike,
+  deleteLike,
 } = require('../controllers/cards');
 
 cardsRouter.get('/', getCards);
