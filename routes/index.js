@@ -6,7 +6,7 @@ const { createUser, login } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 const usersRouter = require('./users');
 const cardsRouter = require('./cards');
-const ERROR_NOT_FOUND = require('../utils/errors/errors');
+const ErrorNotFound = require('../utils/errors/err-not-found');
 const urls = require('../utils/urls');
 
 router.post('/signup', celebrate({
@@ -30,7 +30,7 @@ router.use(auth);
 router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);
 router.use('/', (req, res, next) => {
-  next(new ERROR_NOT_FOUND('Страница не найдена'));
+  next(new ErrorNotFound('Страница не найдена'));
 });
 
 module.exports = router;

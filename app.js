@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const router = require('./routes/index');
 
-/* const errorHandler = require('./middlewares/errors'); */
+const errorHandler = require('./middlewares/errorhandler');
 
 const { PORT = 3000 } = process.env;
 
@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(router);
 
-/* app.use(errorHandler); */
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log('app listen to port 3000');
