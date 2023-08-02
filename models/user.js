@@ -8,20 +8,17 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       default: 'Жак-Ив Кусто',
-      required: false,
       minlength: 2,
       maxlength: 30,
     },
     about: {
       type: String,
-      required: false,
       default: 'Исследователь',
       minlength: 2,
       maxlength: 30,
     },
     avatar: {
       type: String,
-      required: false,
       validate: {
         validator: (v) => isURL(v),
         message: 'Неправильный формат ссылки',
