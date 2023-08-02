@@ -11,10 +11,9 @@ module.exports.getUsers = (req, res, next) => {
     .then((users) => res.send({ data: users }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new ErrorBadRequest('Переданы некорректные данные');
-      } else {
-        next(err);
+        return next(new ErrorBadRequest('Переданы некорректные данные'));
       }
+      return next(err);
     });
 };
 
@@ -38,7 +37,7 @@ module.exports.createUser = (req, res, next) => {
           return next(new ErrorNotUnique('Такой пользователь уже существует'));
         }
         if (err.name === 'CastError' || err.name === 'ValidationError') {
-          return next(ErrorBadRequest('Переданы некорректные данные при создании пользователя'));
+          return next(new ErrorBadRequest('Переданы некорректные данные при создании пользователя'));
         }
         return next(err);
       }));
