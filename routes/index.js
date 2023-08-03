@@ -15,14 +15,14 @@ router.use('/signup', celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(regexUrl),
     email: Joi.string().required().pattern(regexEmail),
-    password: Joi.string().required(),
+    password: Joi.string().required().min(8),
   }),
 }), createUser);
 
 router.use('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().pattern(regexEmail),
-    password: Joi.string().required(),
+    password: Joi.string().required().min(8),
   }),
 }), login);
 

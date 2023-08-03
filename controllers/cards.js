@@ -12,6 +12,7 @@ module.exports.getCards = (req, res, next) => {
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
+
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
@@ -33,10 +34,10 @@ module.exports.deleteCard = (req, res, next) => {
       if (String(card.owner) !== String(owner)) {
         throw new ErrorForbidden('Недостаточно прав');
       }
-      return Card.findByIdAndDelete(cardId);
+      return Card.deleteOne(card);
     })
     .then(() => res.send({ message: 'Карточка успешно удалена' }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 module.exports.addLike = (req, res, next) => {
