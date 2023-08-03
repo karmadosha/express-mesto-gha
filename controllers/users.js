@@ -57,20 +57,19 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.getUserById = (req, res, next) => {
-  const { _id } = req.params;
-  User.findById(_id)
+  User.findById(req.params.userId)
     .then((user) => {
-      if (user) {
-        res.send(user);
-      } else {
-        next(new ErrorNotFound('Пользователь не найден'));
+      if (!user) {
+        throw new ErrorNotFound('Пользователь не найден');
       }
+      return res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
-        return next(new ErrorBadRequest('Переданы некорректные данные'));
+      if (err.name === 'CastError') {
+        next(new ErrorBadRequest('Переданы некорректные данные'));
+        return;
       }
-      return next(err);
+      next(err);
     });
 };
 
