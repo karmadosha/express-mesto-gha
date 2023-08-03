@@ -47,11 +47,11 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
-      if (user) {
-        const token = jwt.sign({ _id: user.id }, 'some-secret-key', { expiresIn: '7d' });
-        return res.send({ token });
+      if (!user) {
+        throw new ErrorUnauthorized('Требуется авторизация');
       }
-      return next(new ErrorUnauthorized('Требуется авторизация'));
+      const token = jwt.sign({ _id: user.id }, 'some-secret-key', { expiresIn: '7d' });
+      return res.send({ token });
     })
     .catch(next);
 };
@@ -91,7 +91,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       if (!user) {
         return next(new ErrorNotFound('Пользователь не найден'));
       }
-      return res.send({ user: avatar });
+      return res.send({ avatar });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
