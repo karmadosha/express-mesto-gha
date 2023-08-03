@@ -47,24 +47,27 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        throw new ErrorUnauthorized('Требуется авторизация');
-      }
-      const token = jwt.sign({ _id: user.id }, 'some-secret-key', { expiresIn: '7d' });
-      return res.send({ token });
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.send({ _id: token });
+    })
+    .catch(() => {
+      throw new ErrorUnauthorized('Пользователь не найден');
     })
     .catch(next);
 };
 
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
+    .then((user) => res.send(user))
+    .catch((err) => {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        return next(new ErrorBadRequest('Переданы некорректные данные'));
+      }
+      if (err.name === 'DocumentNotFound') {
         return next(new ErrorNotFound('Пользователь не найден'));
       }
-      return res.send({ data: user });
-    })
-    .catch(next);
+      return next();
+    });
 };
 
 module.exports.updateUserInfo = (req, res, next) => {
