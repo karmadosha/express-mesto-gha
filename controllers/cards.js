@@ -27,21 +27,20 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(cardId)
     .then((card) => {
       if (!card) {
-        throw new ErrorNotFound('Карточка не найдена');
-      }
-      if (!card.owner.equals(req.user._id)) {
+        throw new ErrorNotFound('Передан несуществующий id');
+      } else if (!card.owner.equals(req.user._id)) {
         throw new ErrorForbidden('Недостаточно прав');
       }
-      return Card.findByIdAndDelete(cardId)
-        .orFail(() => new ErrorNotFound('Карточка не найдена'))
+      return Card.deleteOne(card)
         .then(() => res.send({ message: 'Карточка удалена' }));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ErrorBadRequest('Переданы некорректные данные'));
+      } else {
+        next(err);
       }
-    })
-    .catch(next);
+    });
 };
 
 module.exports.addLike = (req, res, next) => {
