@@ -5,7 +5,7 @@ const auth = require('../middlewares/auth');
 const usersRouter = require('./users');
 const cardsRouter = require('./cards');
 const ErrorNotFound = require('../utils/errors/err-not-found');
-const urls = require('../utils/urls');
+const { regexEmail, regexUrl } = require('../utils/regex');
 
 const router = express.Router();
 
@@ -13,15 +13,16 @@ router.use('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(urls),
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    avatar: Joi.string().pattern(regexUrl),
+    email: Joi.string().required().pattern(regexEmail),
+    password: Joi.string().required(),
   }),
 }), createUser);
+
 router.use('/signin', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    email: Joi.string().required().pattern(regexEmail),
+    password: Joi.string().required(),
   }),
 }), login);
 

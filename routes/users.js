@@ -8,13 +8,13 @@ const {
   updateUserAvatar,
   getCurrentUser,
 } = require('../controllers/users');
-const urls = require('../utils/urls');
+const { regexUrl } = require('../utils/regex');
 
 usersRouter.get('/', getUsers);
 
 usersRouter.get('/:userId', celebrate({
   params: Joi.object().keys({
-    id: Joi.string().required().hex(),
+    userId: Joi.string().hex().required(),
   }),
 }), getUserById);
 
@@ -22,14 +22,14 @@ usersRouter.get('/me', getCurrentUser);
 
 usersRouter.patch('/me', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30).required(),
+    about: Joi.string().min(2).max(30).required(),
   }),
 }), updateUserInfo);
 
 usersRouter.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().regex(urls),
+    avatar: Joi.string().pattern(regexUrl).required(),
   }),
 }), updateUserAvatar);
 

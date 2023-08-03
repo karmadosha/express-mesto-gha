@@ -6,12 +6,7 @@ const ErrorForbidden = require('../utils/errors/err-forbidden');
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new ErrorBadRequest('Переданы некорректные данные'));
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
