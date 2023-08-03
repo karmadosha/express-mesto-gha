@@ -22,6 +22,4 @@ app.use(router);
 app.use(errors());
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log('app listen to port 3000');
-});
+app.listen(PORT);

@@ -26,7 +26,7 @@ usersRouter.patch('/me/avatar', celebrate({
 
 usersRouter.get('/:userId', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().hex().required(),
+    userId: Joi.string().length(24).hex().required(),
   }),
 }), getUserById);
 module.exports = usersRouter;

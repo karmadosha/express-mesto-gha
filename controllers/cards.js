@@ -38,10 +38,10 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new ErrorBadRequest('Переданы некорректные данные');
+        next(new ErrorBadRequest('Переданы некорректные данные'));
       }
-      next(err);
-    });
+    })
+    .catch(next);
 };
 
 module.exports.addLike = (req, res, next) => {

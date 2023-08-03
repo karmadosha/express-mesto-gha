@@ -9,12 +9,7 @@ const ErrorUnauthorized = require('../utils/errors/err-unauthorized');
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new ErrorBadRequest('Переданы некорректные данные'));
-      }
-      return next(err);
-    });
+    .catch((err) => next(err));
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -49,9 +44,6 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.send({ _id: token });
-    })
-    .catch(() => {
-      throw new ErrorUnauthorized('Пользователь не найден');
     })
     .catch(next);
 };
